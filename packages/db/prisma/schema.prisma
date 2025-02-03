@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Assuming you already have a User model from auth
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  password      String
+  createdAt     DateTime?  @default(now())
+  updatedAt     DateTime?  @updatedAt
+  
+  // Relations
+  tracksOwned   Track[]   @relation("TrackOwner")
+  collaborations Track[]  @relation("TrackCollaborators")
+}
+
+model Track {
+  id            String    @id @default(uuid())
+  name          String
+  bpm           Int       @default(120)
+  timeSignature String    @default("4/4")
+  isPublic      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  ownerId       String
+  owner         User      @relation("TrackOwner", fields: [ownerId], references: [id])
+  collaborators User[]    @relation("TrackCollaborators")
+  instruments   Instrument[]
+
+  @@index([ownerId])
+}
+
+model Instrument {
+  id            String    @id @default(uuid())
+  type          String    // piano, drums, synth, etc.
+  volume        Float     @default(1.0)
+  isMuted       Boolean   @default(false)
+  isSolo        Boolean   @default(false)
+  
+  // Relations
+  trackId       String
+  track         Track     @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  notes         Note[]
+
+  @@index([trackId])
+}
+
+model Note {
+  id            String    @id @default(uuid())
+  pitch         Int       // MIDI note number (0-127)
+  startTime     Int       // In milliseconds or ticks
+  duration      Int       
+  velocity      Int       // Note strength (0-127)
+  
+  // Relations
+  instrumentId  String
+  instrument    Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+
+  @@index([instrumentId])
+}
