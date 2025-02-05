@@ -1,0 +1,28 @@
+{
+  "name": "ws",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc -b && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@repo/db": "*",
+    "@types/dotenv": "^8.2.3",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/ws": "^8.5.13",
+    "dotenv": "^16.4.7",
+    "ioredis": "^5.4.2",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^11.0.5",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "^0.0.0"
+  }
+}
